@@ -85,10 +85,10 @@ pub fn update_walls(
 }
 
 pub fn setup_prototype_walls(mut commands: Commands, mut materials: ResMut<Assets<ColorMaterial>>,) {
-    let wall_left = create_wall_bundle(&mut materials);
-    let wall_top = create_wall_bundle(&mut materials);
-    let wall_right = create_wall_bundle(&mut materials);
-    let wall_bottom = create_wall_bundle(&mut materials);
+    let wall_left = create_wall_bundle(materials.add(ColorMaterial::from(Color::RED)));
+    let wall_top = create_wall_bundle(materials.add(ColorMaterial::from(Color::BLUE)));
+    let wall_right = create_wall_bundle(materials.add(ColorMaterial::from(Color::GREEN)));
+    let wall_bottom = create_wall_bundle(materials.add(ColorMaterial::from(Color::YELLOW)));
 
     commands.spawn_bundle(wall_left)
         .insert(GameWall { direction: Direction::LEFT });
@@ -103,9 +103,11 @@ pub fn setup_prototype_walls(mut commands: Commands, mut materials: ResMut<Asset
         .insert(GameWall { direction: Direction::BOTTOM });
 }
 
-fn create_wall_bundle(materials: &mut ResMut<Assets<ColorMaterial>>) -> SpriteBundle {
+/// Create a SpriteBundle containing the materials, size and transforms
+/// necessary for a Wall entity.
+fn create_wall_bundle(color: Handle<ColorMaterial>) -> SpriteBundle {
     SpriteBundle {
-        material: materials.add(ColorMaterial::from(Color::RED)),
+        material: color,
         sprite: Sprite {
           size: Vec2::new(100.0, 100.0),
             ..Default::default()
