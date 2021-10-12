@@ -41,15 +41,15 @@ pub fn update_walls(
                     t.translation.y = 0.0;
                 },
                 Direction::TOP => {
-                    // Set the size to be as high as the screen. Keep the
-                    // width to 20.
+                    // Set the size to be as wide as the screen. Keep the
+                    // height to 20.
                     let height = 20.0;
                     let width = proj.left.abs() + proj.right.abs();
 
                     s.size.x = width;
                     s.size.y = height;
 
-                    // Set the position to the left edge
+                    // Set the position to the top edge
                     t.translation.x = 0.0;
                     t.translation.y = proj.top;
                 },
@@ -62,20 +62,20 @@ pub fn update_walls(
                     s.size.x = width;
                     s.size.y = height;
 
-                    // Set the position to the left edge
+                    // Set the position to the right edge
                     t.translation.x = proj.right;
                     t.translation.y = 0.0;
                 },
                 Direction::BOTTOM => {
-                    // Set the size to be as high as the screen. Keep the
-                    // width to 20.
+                    // Set the size to be as wide as the screen. Keep the
+                    // height to 20.
                     let height = 20.0;
                     let width = proj.left.abs() + proj.right.abs();
 
                     s.size.x = width;
                     s.size.y = height;
 
-                    // Set the position to the left edge
+                    // Set the position to the bottom edge
                     t.translation.x = 0.0;
                     t.translation.y = proj.bottom;
                 },
