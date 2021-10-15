@@ -5,10 +5,10 @@ use bevy_rapier2d::physics::ColliderBundle;
 use bevy_rapier2d::prelude::{ColliderShape};
 
 enum Direction {
-    LEFT,
-    TOP,
-    RIGHT,
-    BOTTOM,
+    Left,
+    Top,
+    Right,
+    Bottom,
 }
 
 pub struct GameWall {
@@ -24,7 +24,7 @@ pub fn setup_cameras(mut commands: Commands) {
 
 pub fn update_walls(
     mut cm: Query<(&Camera, &mut OrthographicProjection)>,
-    mut walls: Query<(
+    walls: Query<(
         Entity,
         &mut GameWall,
         &mut Sprite,
@@ -46,11 +46,11 @@ pub fn update_walls(
 
     let (_, proj) = cm.single_mut().unwrap();
 
-    walls.for_each_mut(|(e, w, mut s, mut t, c)| {
+    walls.for_each_mut(|(e, w, mut s, mut t, _c)| {
         wall_resized.send(GameWallSizeChanged(e));
 
         match w.direction {
-            Direction::LEFT => {
+            Direction::Left => {
                 // Set the size to be as high as the screen. Keep the
                 // width to 20.
                 let height = proj.top + proj.bottom.abs();
@@ -63,7 +63,7 @@ pub fn update_walls(
                 t.translation.x = proj.left;
                 t.translation.y = 0.0;
             }
-            Direction::TOP => {
+            Direction::Top => {
                 // Set the size to be as wide as the screen. Keep the
                 // height to 20.
                 let height = 20.0;
@@ -76,7 +76,7 @@ pub fn update_walls(
                 t.translation.x = 0.0;
                 t.translation.y = proj.top;
             }
-            Direction::RIGHT => {
+            Direction::Right => {
                 // Set the size to be as high as the screen. Keep the
                 // width to 20.
                 let height = proj.top + proj.bottom.abs();
@@ -89,7 +89,7 @@ pub fn update_walls(
                 t.translation.x = proj.right;
                 t.translation.y = 0.0;
             }
-            Direction::BOTTOM => {
+            Direction::Bottom => {
                 // Set the size to be as wide as the screen. Keep the
                 // height to 20.
                 let height = 20.0;
@@ -115,7 +115,7 @@ pub fn setup_prototype_walls(mut commands: Commands, mut materials: ResMut<Asset
     commands
         .spawn_bundle(wall_left)
         .insert(GameWall {
-            direction: Direction::LEFT,
+            direction: Direction::Left,
         })
         .insert_bundle(ColliderBundle {
             shape: ColliderShape::cuboid(100.0, 100.0),
@@ -125,7 +125,7 @@ pub fn setup_prototype_walls(mut commands: Commands, mut materials: ResMut<Asset
     commands
         .spawn_bundle(wall_top)
         .insert(GameWall {
-            direction: Direction::TOP,
+            direction: Direction::Top,
         })
         .insert_bundle(ColliderBundle {
             shape: ColliderShape::cuboid(100.0, 100.0),
@@ -135,7 +135,7 @@ pub fn setup_prototype_walls(mut commands: Commands, mut materials: ResMut<Asset
     commands
         .spawn_bundle(wall_right)
         .insert(GameWall {
-            direction: Direction::RIGHT,
+            direction: Direction::Right,
         })
         .insert_bundle(ColliderBundle {
             shape: ColliderShape::cuboid(100.0, 100.0),
@@ -145,7 +145,7 @@ pub fn setup_prototype_walls(mut commands: Commands, mut materials: ResMut<Asset
     commands
         .spawn_bundle(wall_bottom)
         .insert(GameWall {
-            direction: Direction::BOTTOM,
+            direction: Direction::Bottom,
         })
         .insert_bundle(ColliderBundle {
             shape: ColliderShape::cuboid(100.0, 100.0),
