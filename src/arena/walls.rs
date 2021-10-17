@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy::render::camera::{Camera, OrthographicProjection};
 use bevy::window::{WindowCreated, WindowResized};
 use bevy_rapier2d::physics::ColliderBundle;
-use bevy_rapier2d::prelude::{ColliderShape};
+use bevy_rapier2d::prelude::ColliderShape;
 
 enum Direction {
     Left,
@@ -41,8 +41,6 @@ pub fn update_walls(
     if count_created == 0 && count_resized == 0 {
         return;
     }
-
-    println!("Doing stuff");
 
     let (_, proj) = cm.single_mut().unwrap();
 
