@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy::render::camera::{Camera, OrthographicProjection};
 use bevy::window::{WindowCreated, WindowResized};
 use bevy_rapier2d::physics::{ColliderBundle, ColliderPositionSync};
-use bevy_rapier2d::prelude::{ColliderPosition, ColliderShape};
+use bevy_rapier2d::prelude::{ColliderPosition, ColliderShape, RigidBodyBundle};
 
 enum Direction {
     Left,
@@ -105,20 +105,17 @@ pub fn update_walls(
 }
 
 pub fn setup_prototype_walls(mut commands: Commands, mut materials: ResMut<Assets<ColorMaterial>>) {
-    let wall_left = create_wall_bundle(materials.add(ColorMaterial::from(Color::RED)));
-    let wall_top = create_wall_bundle(materials.add(ColorMaterial::from(Color::BLUE)));
-    let wall_right = create_wall_bundle(materials.add(ColorMaterial::from(Color::GREEN)));
-    let wall_bottom = create_wall_bundle(materials.add(ColorMaterial::from(Color::YELLOW)));
+    let wall_left = create_wall_sprite(materials.add(ColorMaterial::from(Color::RED)));
+    let wall_top = create_wall_sprite(materials.add(ColorMaterial::from(Color::BLUE)));
+    let wall_right = create_wall_sprite(materials.add(ColorMaterial::from(Color::GREEN)));
+    let wall_bottom = create_wall_sprite(materials.add(ColorMaterial::from(Color::YELLOW)));
 
     commands
         .spawn_bundle(wall_left)
         .insert(GameWall {
             direction: Direction::Left,
         })
-        .insert_bundle(ColliderBundle {
-            shape: ColliderShape::cuboid(100.0, 100.0),
-            ..Default::default()
-        })
+        .insert_bundle(create_wall_collider(100.0, 100.0))
         .insert(ColliderPositionSync::Discrete);
 
     commands
@@ -126,10 +123,7 @@ pub fn setup_prototype_walls(mut commands: Commands, mut materials: ResMut<Asset
         .insert(GameWall {
             direction: Direction::Top,
         })
-        .insert_bundle(ColliderBundle {
-            shape: ColliderShape::cuboid(100.0, 100.0),
-            ..Default::default()
-        })
+        .insert_bundle(create_wall_collider(100.0, 100.0))
         .insert(ColliderPositionSync::Discrete);
 
     commands
@@ -137,10 +131,7 @@ pub fn setup_prototype_walls(mut commands: Commands, mut materials: ResMut<Asset
         .insert(GameWall {
             direction: Direction::Right,
         })
-        .insert_bundle(ColliderBundle {
-            shape: ColliderShape::cuboid(100.0, 100.0),
-            ..Default::default()
-        })
+        .insert_bundle(create_wall_collider(100.0, 100.0))
         .insert(ColliderPositionSync::Discrete);
 
     commands
@@ -148,10 +139,7 @@ pub fn setup_prototype_walls(mut commands: Commands, mut materials: ResMut<Asset
         .insert(GameWall {
             direction: Direction::Bottom,
         })
-        .insert_bundle(ColliderBundle {
-            shape: ColliderShape::cuboid(100.0, 100.0),
-            ..Default::default()
-        })
+        .insert_bundle(create_wall_collider(100.0, 100.0))
         .insert(ColliderPositionSync::Discrete);
 }
 
@@ -166,30 +154,42 @@ pub fn update_wall_colliders(
     // off and create a new one.
     for e in wall_changed_event.iter() {
         let s = walls.get_component::<Sprite>(e.0).unwrap();
+        
+        println!("{:?}", s);
 
         commands
             .entity(e.0)
             .remove_bundle::<ColliderBundle>()
-            .insert_bundle(ColliderBundle {
-                shape: ColliderShape::cuboid(s.size.x / 2.0, s.size.y / 2.0),
-                ..Default::default()
-            });
+            .insert_bundle(create_wall_collider(s.size.x, s.size.y));
     }
 }
 
 /// Create a SpriteBundle containing the materials, size and transforms
 /// necessary for a Wall entity.
-fn create_wall_bundle(color: Handle<ColorMaterial>) -> SpriteBundle {
+fn create_wall_sprite(color: Handle<ColorMaterial>) -> SpriteBundle {
     SpriteBundle {
         material: color,
         sprite: Sprite {
             size: Vec2::new(100.0, 100.0),
             ..Default::default()
-        },
+        }, 
         transform: Transform {
             translation: Vec3::new(0.0, 0.0, 0.0),
             ..Default::default()
         },
+        ..Default::default()
+    }
+}
+
+fn create_wall_collider(width: f32, height: f32) -> ColliderBundle {
+    ColliderBundle {
+        shape: ColliderShape::cuboid(2000.0, 2000.0),
+        ..Default::default()
+    }
+}
+
+fn create_wall_body(width: u32, height: u32) -> RigidBodyBundle {
+    RigidBodyBundle {
         ..Default::default()
     }
 }
