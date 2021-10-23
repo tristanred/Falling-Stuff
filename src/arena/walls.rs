@@ -1,8 +1,8 @@
 use bevy::prelude::*;
 use bevy::render::camera::{Camera, OrthographicProjection};
 use bevy::window::{WindowCreated, WindowResized};
-use bevy_rapier2d::physics::ColliderBundle;
-use bevy_rapier2d::prelude::ColliderShape;
+use bevy_rapier2d::physics::{ColliderBundle, ColliderPositionSync};
+use bevy_rapier2d::prelude::{ColliderPosition, ColliderShape};
 
 enum Direction {
     Left,
@@ -28,7 +28,7 @@ pub fn update_walls(
         Entity,
         &mut GameWall,
         &mut Sprite,
-        &mut Transform,
+        &mut ColliderPosition,
         Option<&mut ColliderShape>,
     )>,
     mut window_created: EventReader<WindowCreated>,
@@ -118,7 +118,8 @@ pub fn setup_prototype_walls(mut commands: Commands, mut materials: ResMut<Asset
         .insert_bundle(ColliderBundle {
             shape: ColliderShape::cuboid(100.0, 100.0),
             ..Default::default()
-        });
+        })
+        .insert(ColliderPositionSync::Discrete);
 
     commands
         .spawn_bundle(wall_top)
@@ -128,7 +129,8 @@ pub fn setup_prototype_walls(mut commands: Commands, mut materials: ResMut<Asset
         .insert_bundle(ColliderBundle {
             shape: ColliderShape::cuboid(100.0, 100.0),
             ..Default::default()
-        });
+        })
+        .insert(ColliderPositionSync::Discrete);
 
     commands
         .spawn_bundle(wall_right)
@@ -138,7 +140,8 @@ pub fn setup_prototype_walls(mut commands: Commands, mut materials: ResMut<Asset
         .insert_bundle(ColliderBundle {
             shape: ColliderShape::cuboid(100.0, 100.0),
             ..Default::default()
-        });
+        })
+        .insert(ColliderPositionSync::Discrete);
 
     commands
         .spawn_bundle(wall_bottom)
@@ -148,7 +151,8 @@ pub fn setup_prototype_walls(mut commands: Commands, mut materials: ResMut<Asset
         .insert_bundle(ColliderBundle {
             shape: ColliderShape::cuboid(100.0, 100.0),
             ..Default::default()
-        });
+        })
+        .insert(ColliderPositionSync::Discrete);
 }
 
 pub fn update_wall_colliders(
